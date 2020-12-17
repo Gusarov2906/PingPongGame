@@ -1,10 +1,15 @@
-import javax.imageio.ImageIO;
+package MainPackage;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
+
+
+/**
+ * PingPongFrame - main frame of game
+ */
 
 public class PingPongFrame extends JFrame {
     public Info info;
@@ -17,6 +22,10 @@ public class PingPongFrame extends JFrame {
     private BufferedImage backgroundTexture;
     public int scorePlayer1;
     public int scorePlayer2;
+
+    /**
+     * Constructor
+     */
 
     public PingPongFrame()
     {
@@ -46,6 +55,10 @@ public class PingPongFrame extends JFrame {
         addKeyListener(new KeyEventHandler());
     }
 
+    /**
+     * Method where starts thread
+     */
+
     public void run()
     {
         Thread player1Thread = new Thread(player1Paddle);
@@ -56,7 +69,17 @@ public class PingPongFrame extends JFrame {
         ballThread.start();
         //ball.run();
     }
+
+    /**
+     * Class to catch keyboard clicks
+     */
+
     public class KeyEventHandler extends KeyAdapter {
+
+        /**
+         * Method to catch pressed keyboard keys
+         * @param event - event
+         */
 
         public void keyPressed(KeyEvent event) {
             if (event.getKeyCode() == KeyEvent.VK_SPACE) {
@@ -77,6 +100,12 @@ public class PingPongFrame extends JFrame {
             if (event.getKeyCode() == KeyEvent.VK_UP) Main.pressedUpArrow = true;
             if (event.getKeyCode() == KeyEvent.VK_DOWN) Main.pressedDownArrow = true;
         }
+
+        /**
+         * Method to catch released keyboard keys
+         * @param event - event
+         */
+
         public void keyReleased(KeyEvent event) {
             if (event.getKeyCode() == KeyEvent.VK_W) Main.pressedW = false;
             if (event.getKeyCode() == KeyEvent.VK_S) Main.pressedS = false;

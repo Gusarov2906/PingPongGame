@@ -1,3 +1,5 @@
+package MainPackage;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -6,17 +8,29 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Random;
 
+/**
+ * Ball - class realize ball object with run method
+ */
+
 public class Ball extends JComponent implements Runnable {
+
     public int radius = 15;
-    private final static Color color = Color.RED;
-    PingPongFrame frame;
     private int speedX = 1;
+    public PingPongFrame frame;
+
     private int speedY = 1;
+    private BufferedImage ballTexture;
     private int x = Main.width/2;
     private int y = (Main.height-30)/2 - this.radius;
     private final Random random = new Random();
     private final ColliderBox ballColliderBox;
-    private BufferedImage ballTexture;
+    private final static Color color = Color.RED;
+
+    /**
+     * Constructor with parameters
+     * @param radius - radius of ball
+     * @param frame - main frame object
+     */
 
     public Ball(int radius, PingPongFrame frame) {
         super();
@@ -31,9 +45,14 @@ public class Ball extends JComponent implements Runnable {
         }
         catch (Exception e)
         {
-
+            System.out.println(e.toString());
         }
     }
+
+    /**
+     * Draw method
+     * @param g - object of Graphics type
+     */
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -45,28 +64,36 @@ public class Ball extends JComponent implements Runnable {
         g2.setPaint(ballTextureTp);
         g2.fill(circle);
     }
+
+    /**
+     * Random start set speed and set location for ball
+     */
+
     public void switchBallToStartPosition() {
-        switch (((random.nextInt(100))%4))
-        {
-            case 0:
+        switch (((random.nextInt(100)) % 4)) {
+            case 0 -> {
                 speedY = 1;
                 speedX = 1;
-                break;
-            case 1:
+            }
+            case 1 -> {
                 speedY = 1;
                 speedX = -1;
-                break;
-            case 2:
+            }
+            case 2 -> {
                 speedY = -1;
                 speedX = 1;
-                break;
-            case 3:
+            }
+            case 3 -> {
                 speedY = -1;
                 speedX = -1;
-                break;
+            }
         }
         this.setLocation(Main.width/2, (Main.height-30)/2 - this.radius );
     }
+
+    /**
+     * Set start location for both paddles
+     */
 
     public void resetPaddlePosition()
     {
@@ -78,6 +105,9 @@ public class Ball extends JComponent implements Runnable {
         frame.player2Paddle.setLocation(frame.player2Paddle.x, frame.player2Paddle.y);
     }
 
+    /**
+     * Main thread method wo control puddle
+     */
 
     @Override
     public void run() {

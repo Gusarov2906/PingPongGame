@@ -1,3 +1,8 @@
+package MainPackage;
+
+/**
+ * Main class of program
+ */
 public class Main {
     public static PingPongFrame pingPongFrame;
     public static int width = 1280;
@@ -9,6 +14,10 @@ public class Main {
     public static boolean pressedDownArrow = false;
     public static boolean isReset = false;
 
+    /**
+     * Method where starts program
+     * @param args - arguments
+     */
     public static void main(String[] args) {
         pingPongFrame = new PingPongFrame();
     }

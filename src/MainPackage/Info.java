@@ -1,13 +1,30 @@
+package MainPackage;
+
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Class Info - class to output info to JPanel
+ */
+
 public class Info extends JComponent {
     public String score = "0:0";
+
+    /**
+     * Constructor
+     */
+
     public Info() {
         super();
         setLocation(0, 0);
         setSize(new Dimension(Main.width, Main.height));
     }
+
+    /**
+     * Draw method
+     * @param g - object of Graphics type
+     */
+
     @Override
     public void paintComponent(Graphics g) {
         try {

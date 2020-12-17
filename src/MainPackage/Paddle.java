@@ -1,21 +1,33 @@
+package MainPackage;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
+/**
+ * Paddle - class realize paddle object with run method
+ */
 
 public class Paddle extends JComponent implements Runnable {
+
     public int x;
     public int y = (Main.height -30)/2 - height/2;
     public static int weight = 30;
     public static int height = 150;
     private static final Color color = Color.GREEN;
     private final int playerId;
-    private static final int speed = 2;
     public ColliderBox paddleColliderBox;
+
+    private static final int speed = 2;
     private BufferedImage paddleTexture;
 
+    /**
+     * Constructor with parameters
+     * @param x - x coordinate
+     * @param playerId - id of player
+     */
     public Paddle(int x, int playerId)
     {
         super();
@@ -33,6 +45,9 @@ public class Paddle extends JComponent implements Runnable {
         }
     }
 
+    /**
+     * Main thread method wo control puddle
+     */
     @Override
     public void run() {
         while (Main.isRunning) {
@@ -61,6 +76,11 @@ public class Paddle extends JComponent implements Runnable {
             }
         }
     }
+
+    /**
+     * Draw method
+     * @param g - object of Graphics type
+     */
 
     @Override
     public void paintComponent(Graphics g) {
