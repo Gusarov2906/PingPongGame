@@ -40,7 +40,7 @@ public class Ball extends JComponent implements Runnable {
         Graphics2D g2 = (Graphics2D) g;
         g2.setColor(color);
         Ellipse2D circle = new Ellipse2D.Double(0, 0, 2 * radius, 2 * radius);
-        var ballTextureTp = new TexturePaint(ballTexture, new Rectangle(0,0,30,30));
+        var ballTextureTp = new TexturePaint(ballTexture, new Rectangle(0,0,this.radius*2,this.radius*2));
         g2.draw(circle);
         g2.setPaint(ballTextureTp);
         g2.fill(circle);

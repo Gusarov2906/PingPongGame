@@ -68,7 +68,7 @@ public class Paddle extends JComponent implements Runnable {
         g2.setBackground(color);
         g2.setColor(color);
         Rectangle2D rect = new Rectangle2D.Double(0, 0, weight, height);
-        var paddleTextureTp = new TexturePaint(paddleTexture, new Rectangle(0,0,30,150));
+        var paddleTextureTp = new TexturePaint(paddleTexture, new Rectangle(0,0,weight,height));
         g2.setPaint(paddleTextureTp);
         g2.draw(rect);
         g2.fill(rect);

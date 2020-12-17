@@ -25,7 +25,7 @@ public class PingPongFrame extends JFrame {
         upEdge = new ColliderBox(0,0,Main.width,5);
         player1Paddle = new Paddle(20, 1);
         player2Paddle = new Paddle(Main.width - 50, 2);
-        ball = new Ball(15,this);
+        ball = new Ball(20,this);
         setTitle("PingPongGame");
         panel = new JPanel();
         panel.setLayout(null);
