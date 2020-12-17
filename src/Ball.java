@@ -7,16 +7,19 @@ public class Ball extends JComponent implements Runnable {
     public int radius = 15;
     private final static Color color = Color.RED;
     PingPongFrame frame;
-    private int paddleHeight;
-    private int paddleWidth;
-    private int speedX = 10;
-    private int speedY = 10;
-    private Random random = new Random();
+    private int speedX = 1;
+    private int speedY = 1;
+    private int x = Main.width/2;
+    private int y = (Main.height-30)/2 - this.radius;
+    private final Random random = new Random();
+    private final ColliderBox ballColliderBox;
 
-    public Ball(PingPongFrame frame) {
+    public Ball(int radius, PingPongFrame frame) {
         super();
         this.frame = frame;
-        setLocation(640, 360);
+        this.radius = radius;
+        ballColliderBox = new ColliderBox(x, y,this.radius*2,this.radius*2);
+        setLocation(x, y);
         setSize(new Dimension(2 * radius + 2, 2 * radius + 2));
         switchBallToStartPosition();
     }
@@ -30,58 +33,87 @@ public class Ball extends JComponent implements Runnable {
         g2.fill(circle);
     }
     public void switchBallToStartPosition() {
-        speedY = 10 * ((random.nextInt(2) + 1) * 2 - 3);
-        speedX = 10 * ((random.nextInt(2) + 1) * 2 - 3);
-        this.setLocation(Main.width/2, Main.height/2);
+        speedY = ((random.nextInt(2) + 1) * 2 - 3);
+        speedX = ((random.nextInt(2) + 1) * 2 - 3);
+        this.setLocation(Main.width/2, (Main.height-30)/2 - this.radius );
     }
 
     @Override
     public void run() {
         frame.repaint();
-        paddleHeight = Paddle.h;
-        paddleWidth = Paddle.w;
+        int paddleHeight = Paddle.height;
+        int paddleWidth = Paddle.weight;
+        boolean changedYFromPaddle = false;
+        boolean changedXFromPaddle = false;
         while (Main.isRunning) {
             int x1, x2, y1, y2;
             synchronized (frame.player1Paddle) {
-                x1 = frame.player1Paddle.getLocation().x;
-                y1 = frame.player1Paddle.getLocation().y;
+                frame.player1Paddle.x = frame.player1Paddle.getLocation().x;
+                frame.player1Paddle.paddleColliderBox.x = frame.player1Paddle.getLocation().x;
+                frame.player1Paddle.y = frame.player1Paddle.getLocation().y;
+                frame.player1Paddle.paddleColliderBox.y = frame.player1Paddle.getLocation().y;
             }
             synchronized (frame.player2Paddle) {
-                x2 = frame.player2Paddle.getLocation().x;
-                y2 = frame.player2Paddle.getLocation().y;
+                frame.player2Paddle.x = frame.player2Paddle.getLocation().x;
+                frame.player2Paddle.paddleColliderBox.x = frame.player2Paddle.getLocation().x;
+                frame.player2Paddle.y = frame.player2Paddle.getLocation().y;
+                frame.player2Paddle.paddleColliderBox.y = frame.player2Paddle.getLocation().y;
             }
-            int xBall = this.getLocation().x;
-            int yBall = this.getLocation().y;
-            if (((x1 + paddleWidth > xBall) && (y1 <= yBall + 2 * this.radius) && (y1 + paddleHeight >= yBall))
-                    || ((x2 < xBall + 2 * this.radius) && (y2 <= yBall + 2 * this.radius) && (y2 + paddleHeight >= yBall))) {
-                speedX *= -1;
-                this.setLocation(xBall + (int)(speedX * 1.5), yBall + (int)(speedY * 1.5));
-            }
-            else {
-                if (yBall < 10 || yBall + 2 * this.radius > Main.height - 40) {
+            this.x = this.getLocation().x;
+            ballColliderBox.x = this.getLocation().x;
+            this.y = this.getLocation().y;
+            ballColliderBox.y = this.getLocation().y;
+
+            if(ballColliderBox.getDownColliderLine() >= frame.downEdge.getUpColliderLine()
+            || ballColliderBox.getUpColliderLine() <= frame.upEdge.getDownColliderLine()
+            || (ballColliderBox.getLeftColliderLine() <= frame.player1Paddle.paddleColliderBox.getRightColliderLine()
+                    && ballColliderBox.getUpColliderLine() >= frame.player1Paddle.paddleColliderBox.getUpColliderLine() + frame.player1Paddle.paddleColliderBox.height - 3
+                    && ballColliderBox.getUpColliderLine() <= frame.player1Paddle.paddleColliderBox.getDownColliderLine()
+                    && ballColliderBox.getRightColliderLine() >= frame.player1Paddle.paddleColliderBox.getLeftColliderLine())
+            || (ballColliderBox.getRightColliderLine() >= frame.player2Paddle.paddleColliderBox.getLeftColliderLine()
+                    && ballColliderBox.getUpColliderLine() >= frame.player2Paddle.paddleColliderBox.getUpColliderLine() + frame.player2Paddle.paddleColliderBox.height - 3
+                    && ballColliderBox.getUpColliderLine() <= frame.player2Paddle.paddleColliderBox.getDownColliderLine()
+                    && ballColliderBox.getLeftColliderLine() <= frame.player2Paddle.paddleColliderBox.getRightColliderLine())
+            || (ballColliderBox.getLeftColliderLine() <= frame.player1Paddle.paddleColliderBox.getRightColliderLine()
+                    && ballColliderBox.getDownColliderLine() <= frame.player1Paddle.paddleColliderBox.getDownColliderLine() - frame.player1Paddle.paddleColliderBox.height + 3
+                    && ballColliderBox.getDownColliderLine() >= frame.player1Paddle.paddleColliderBox.getUpColliderLine()
+                    && ballColliderBox.getRightColliderLine() >= frame.player1Paddle.paddleColliderBox.getLeftColliderLine())
+            || (ballColliderBox.getRightColliderLine() >= frame.player2Paddle.paddleColliderBox.getLeftColliderLine()
+                    && ballColliderBox.getDownColliderLine() <= frame.player2Paddle.paddleColliderBox.getDownColliderLine() - frame.player2Paddle.paddleColliderBox.height + 3
+                    && ballColliderBox.getDownColliderLine() >= frame.player2Paddle.paddleColliderBox.getUpColliderLine()
+                    && ballColliderBox.getLeftColliderLine() <= frame.player2Paddle.paddleColliderBox.getRightColliderLine()))
+            {
                     speedY *= -1;
-                    this.setLocation(xBall + speedX, yBall + speedY);
-                }
-                else {
-                    if (xBall <= 5) {
-                        switchBallToStartPosition();
 
-                        frame.repaint();
-                    }
-                    else {
-                        if (xBall + 2 * this.radius >= Main.width) {
-                            switchBallToStartPosition();
 
-                            frame.repaint();
-                        }
-                        else {
-                            this.setLocation(xBall + speedX, yBall + speedY);
-                        }
-                    }
-                }
+                this.setLocation(x + speedX*3,y + speedY*3);
+                this.x = this.getLocation().x;
+                ballColliderBox.x = this.getLocation().x;
+                this.y = this.getLocation().y;
+                ballColliderBox.y = this.getLocation().y;
             }
+            if((ballColliderBox.getLeftColliderLine() <= frame.player1Paddle.paddleColliderBox.getRightColliderLine()
+            && ballColliderBox.getDownColliderLine() >= frame.player1Paddle.paddleColliderBox.getUpColliderLine()
+            && ballColliderBox.getUpColliderLine() <= frame.player1Paddle.paddleColliderBox.getDownColliderLine()
+            && ballColliderBox.getRightColliderLine() >= frame.player1Paddle.paddleColliderBox.getLeftColliderLine())
+                ||(ballColliderBox.getRightColliderLine() >= frame.player2Paddle.paddleColliderBox.getLeftColliderLine()
+                && ballColliderBox.getUpColliderLine() <= frame.player2Paddle.paddleColliderBox.getDownColliderLine()
+                && ballColliderBox.getDownColliderLine() >= frame.player2Paddle.paddleColliderBox.getUpColliderLine()
+                && ballColliderBox.getLeftColliderLine() <= frame.player2Paddle.paddleColliderBox.getRightColliderLine())
+            )
+            {
+                speedX *= -1;
+                this.setLocation(x + speedX*3,y + speedY*3);
+                this.x = this.getLocation().x;
+                ballColliderBox.x = this.getLocation().x;
+                this.y = this.getLocation().y;
+                ballColliderBox.y = this.getLocation().y;
+            }
+
+
+            this.setLocation(x + speedX, y +speedY);
             try {
-                Thread.sleep(50);
+                Thread.sleep(1);
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }

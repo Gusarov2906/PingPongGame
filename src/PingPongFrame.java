@@ -5,16 +5,20 @@ import java.awt.event.KeyEvent;
 
 public class PingPongFrame extends JFrame {
     public Info info;
-    public Paddle player1Paddle;
-    public Paddle player2Paddle;
+    public final Paddle player1Paddle;
+    public final Paddle player2Paddle;
     public Ball ball;
     private JPanel panel;
+    public ColliderBox downEdge;
+    public ColliderBox upEdge;
 
     public PingPongFrame()
     {
-        player1Paddle = new Paddle(200, 1);
-        player2Paddle = new Paddle(Main.width - 200, 2);
-        ball = new Ball(this);
+        downEdge = new ColliderBox(0,Main.height -35,Main.width,5);
+        upEdge = new ColliderBox(0,0,Main.width,5);
+        player1Paddle = new Paddle(20, 1);
+        player2Paddle = new Paddle(Main.width - 50, 2);
+        ball = new Ball(15,this);
         setTitle("PingPongGame");
         panel = new JPanel();
         panel.setLayout(null);
@@ -44,7 +48,7 @@ public class PingPongFrame extends JFrame {
     public class KeyEventHandler extends KeyAdapter {
 
         public void keyPressed(KeyEvent event) {
-            if (event.getKeyCode() == KeyEvent.VK_P) {
+            if (event.getKeyCode() == KeyEvent.VK_SPACE) {
                 Main.isRunning = !Main.isRunning;
                 if (Main.isRunning) {
                     run();
