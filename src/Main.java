@@ -7,6 +7,7 @@ public class Main {
     public static boolean pressedS = false;
     public static boolean pressedUpArrow = false;
     public static boolean pressedDownArrow = false;
+    public static boolean isReset = false;
 
     public static void main(String[] args) {
         pingPongFrame = new PingPongFrame();
